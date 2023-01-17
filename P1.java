@@ -131,7 +131,7 @@ public class P1 {
                     String line;
                     
                     while ((line = reader.readLine()) != null){
-                        String[] info = line.split(",");
+                        String[] info = line.split(",\n");
                         System.out.printf(info[1], "\n");
                     }
                     reader.close();
