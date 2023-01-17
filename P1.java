@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.io.*;
+import java.util.Scanner;
+
 public class P1 {
 	
 	/* Define data structures for holding the data here */
@@ -126,28 +128,63 @@ public class P1 {
 
                 try{
                     File inputFile = new File(cmd.getParameters()[0]);
-                    BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                    Scanner scanner = new Scanner(inputFile);
 
-                    String line;
+                    scanner.nextLine();
                     
-                    while ((line = reader.readLine()) != null){
-                        String[] info = line.split(",\n");
-                        System.out.printf(info[1], "\n");
+                    while (scanner.hasNextLine()){
+                        String[] input = scanner.nextLine().split(",");
+
+                        coach newCoach = new coach(input[0], Integer.parseInt(input[1]), input[3], input[4], Integer.parseInt(input[5]), Integer.parseInt(input[6]), Integer.parseInt(input[7]), Integer.parseInt(input[8]), input[9]);
+                        CoachList.add(newCoach); 
                     }
-                    reader.close();
+                    scanner.close();
                 }
                 catch(Exception e){
-                    System.out.printf("File not found");
-                    continue;
+                    System.out.println(e);
+                    
+                }
+            }
+
+            else if (cmd.getCommand().equals("load_teams")) {
+                try{
+                    File inputFile = new File(cmd.getParameters()[0]);
+                    Scanner scanner = new Scanner(inputFile);
+
+                    scanner.nextLine();
+                    
+                    while (scanner.hasNextLine()){
+                        String[] input = scanner.nextLine().split(",");
+                        if (input.length > 4){
+                            input[1] += " " + input[2]; 
+                            team newTeam = new team(input[0], input[1], input[3], input[4].charAt(0));
+                            TeamsList.add(newTeam);
+                        }
+                        else{
+                            team newTeam = new team(input[0],input[1], input[2], input[3].charAt(0));
+                            TeamsList.add(newTeam);
+                        }
+                    }
+                    scanner.close();
+                }
+                catch(Exception e){
+                    System.out.println(e);
+                    
                 }
                 
-
-            }
-            else if (cmd.getCommand().equals("load_teams")) {
-            
             }
             else if (cmd.getCommand().equals("best_coach")) {
+                int max = 0;
+                coach biggest = new coach("", 0, "", "", 0, 0, 0 ,0 , "");
 
+                for (coach i : CoachList){
+                    int total = (i.seasonWin-i.seasonLoss) + (i.playoffWin-i.playoffLost);
+                    if (max < total){
+                        max = total;
+                        biggest = i;
+                    }
+                }
+                System.out.format("%.9S, %4s, %s, %s, %d, %d, %d, %d, %S\n", biggest.CoachID, biggest.Season, biggest.FirstName, biggest.LastName, biggest.seasonWin, biggest.seasonLoss, biggest.playoffWin, biggest.playoffLost, biggest.Team);
             }
             else if (cmd.getCommand().equals("search_coaches")) {
 
