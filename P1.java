@@ -34,7 +34,7 @@ public class P1 {
         String TeamID = "";
         String Location = "";
         String Name = "";
-        Character League = '\n';
+        Character League = '\0';
 
         public team(String teamID, String location, String name, Character league){
             this.TeamID = teamID;
@@ -122,6 +122,7 @@ public class P1 {
                         }
                     }
                 }
+                
             }
 
             else if (cmd.getCommand().equals("load_coaches")) {
