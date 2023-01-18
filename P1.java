@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Scanner;
+import java.util.Iterator;
 
 public class P1 {
 	
@@ -62,7 +63,7 @@ public class P1 {
         
         Command cmd = null;
         while ((cmd = parser.fetchCommand()) != null) {
-            //System.out.println(cmd);
+            System.out.println(cmd);
             
             boolean result=false;
             
@@ -99,12 +100,11 @@ public class P1 {
             }
             else if (cmd.getCommand().equals("coaches_by_name")) {
                 for (coach i : CoachList){
-                    if (i.LastName == cmd.getParameters()[0]){
+                    if (i.LastName.equals(cmd.getParameters()[0])){
                         System.out.format("%.9S, %4s, %s, %s, %d, %d, %d, %d, %S\n", i.CoachID, i.Season, i.FirstName, i.LastName, i.seasonWin, i.seasonLoss, i.playoffWin, i.playoffLost, i.Team);
                         for (team j : TeamsList){
-                            if (i.Team == j.Name){
-                                System.out.format("%S", j.TeamID);
-                                
+                            if (i.Team.equals(j.Name)){
+                                System.out.format("%S", j.TeamID);   
                             }
                         }
                     }
@@ -113,16 +113,15 @@ public class P1 {
 
             else if (cmd.getCommand().equals("teams_by_city")) {
                 for(team i : TeamsList){
-                    if (i.Location == cmd.getParameters()[0]){
+                    if (i.Location.equals(cmd.getParameters()[0])){
                         System.out.format("%S, %s, %s, %s\n", i.TeamID, i.Location, i.Name, i.League);
                         for (coach j : CoachList){
-                            if(j.Team == i.TeamID){
-                                System.out.format("%s %s\n", j.FirstName, j.LastName);
+                            if(j.Team.equals(i.TeamID)){
+                                System.out.format("Coach: %s %s Year:\n", j.FirstName, j.LastName, j.Season);
                             }
                         }
                     }
                 }
-                
             }
 
             else if (cmd.getCommand().equals("load_coaches")) {
@@ -188,7 +187,164 @@ public class P1 {
                 System.out.format("%.9S, %4s, %s, %s, %d, %d, %d, %d, %S\n", biggest.CoachID, biggest.Season, biggest.FirstName, biggest.LastName, biggest.seasonWin, biggest.seasonLoss, biggest.playoffWin, biggest.playoffLost, biggest.Team);
             }
             else if (cmd.getCommand().equals("search_coaches")) {
+                int index = 0;
 
+                ArrayList<coach> currentQuery = (ArrayList)CoachList.clone();
+                
+
+                Iterator iterator = currentQuery.iterator();
+
+                for (String i : cmd.getParameters()){
+
+                    String[] option = i.split("=");
+                    
+
+                    if (option[0].equals("coach_id")){
+                        String value = cmd.getParameters()[index].substring(cmd.getParameters()[index].lastIndexOf("=")+1);
+                        while(iterator.hasNext()){
+                            try{
+                                coach x = (coach) iterator.next();
+                                if (!x.CoachID.equals(value)){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                            
+                        }                        
+                    } 
+                    else if (option[0].equals("season")){
+                        int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
+                        while(iterator.hasNext()){
+                            try{    
+                                coach x = (coach) iterator.next();
+                                if (x.Season != value){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                        }
+                    }
+                    else if (option[0].equals("first_name")){
+                        String value = cmd.getParameters()[index].substring(cmd.getParameters()[index].lastIndexOf("=")+1);
+                        while(iterator.hasNext()){
+                            try{
+                                coach x = (coach) iterator.next();
+                                if (!x.FirstName.equals(value)){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                        }
+                    }                    
+            
+                    else if (option[0].equals("last_name")){
+                        String stringInc = cmd.getParameters()[index].substring(cmd.getParameters()[index].lastIndexOf("=")+1);
+                        String value = stringInc;
+                        
+                        String[] string = stringInc.split("\\+");
+                        if (string.length > 1){
+                            value = string[0] + " " + string[1];
+                        }
+                        
+                        while(iterator.hasNext()){
+                            try{
+                                coach x = (coach) iterator.next();
+                                if (!x.LastName.equals(value)){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                        }
+                    }
+            
+                    else if (option[0].equals("season_wins")){
+                        int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
+                        while(iterator.hasNext()){
+                            try{
+                                coach x = (coach) iterator.next();
+                                if (x.seasonWin != value){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                        }
+                    }
+            
+                    else if (option[0].equals("season_losses")){
+                        int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
+                        while(iterator.hasNext()){
+                            try{
+                                coach x = (coach) iterator.next();
+                                if (x.seasonLoss != value){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                        }
+                    }
+
+                    else if (option[0].equals("playoff_wins")){
+                        int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
+                        while(iterator.hasNext()){
+                            try{
+                                coach x = (coach) iterator.next();    
+                                if (x.playoffWin != value){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                        }
+                    }
+            
+                    else if (option[0].equals("playoff_losses")){
+                        int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
+                        while(iterator.hasNext()){
+                            try{
+                                coach x = (coach) iterator.next();
+                                if (x.playoffLost != value){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                        }
+                    }
+            
+                    else if (option[0].equals("team")){
+                        String value = cmd.getParameters()[index].substring(cmd.getParameters()[index].lastIndexOf("=")+1);
+                        while(iterator.hasNext()){
+                            try{
+                                coach x = (coach) iterator.next();
+                                if (!x.Team.equals(value)){
+                                    iterator.remove();
+                                }
+                            }
+                            catch(Exception e){
+                                
+                            }
+                        }
+                    }
+                    iterator = x.
+                    index += 1;
+                }
+                for(coach i : currentQuery){
+                    System.out.format("%.9S, %4s, %s, %s, %d, %d, %d, %d, %S\n", i.CoachID, i.Season, i.FirstName, i.LastName, i.seasonWin, i.seasonLoss, i.playoffWin, i.playoffLost, i.Team);
+                }
             }
             else if (cmd.getCommand().equals("exit")) {
                 System.out.println("Leaving the database, goodbye!");
