@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.io.*;
 import java.util.Scanner;
 import java.util.Iterator;
+import java.util.ListIterator;
 
 public class P1 {
 	
@@ -63,7 +64,6 @@ public class P1 {
         
         Command cmd = null;
         while ((cmd = parser.fetchCommand()) != null) {
-            System.out.println(cmd);
             
             boolean result=false;
             
@@ -100,7 +100,7 @@ public class P1 {
             }
             else if (cmd.getCommand().equals("coaches_by_name")) {
                 for (coach i : CoachList){
-                    if (i.LastName.equals(cmd.getParameters()[0])){
+                    if (i.LastName.toLowerCase().equals(cmd.getParameters()[0].toLowerCase())){
                         System.out.format("%.9S, %4s, %s, %s, %d, %d, %d, %d, %S\n", i.CoachID, i.Season, i.FirstName, i.LastName, i.seasonWin, i.seasonLoss, i.playoffWin, i.playoffLost, i.Team);
                         for (team j : TeamsList){
                             if (i.Team.equals(j.Name)){
@@ -113,7 +113,7 @@ public class P1 {
 
             else if (cmd.getCommand().equals("teams_by_city")) {
                 for(team i : TeamsList){
-                    if (i.Location.equals(cmd.getParameters()[0])){
+                    if (i.Location.toLowerCase().equals(cmd.getParameters()[0].toLowerCase())){
                         System.out.format("%S, %s, %s, %s\n", i.TeamID, i.Location, i.Name, i.League);
                         for (coach j : CoachList){
                             if(j.Team.equals(i.TeamID)){
@@ -189,57 +189,48 @@ public class P1 {
             else if (cmd.getCommand().equals("search_coaches")) {
                 int index = 0;
 
-                ArrayList<coach> currentQuery = (ArrayList)CoachList.clone();
-                
+                ArrayList<coach> currentQuery = new ArrayList<coach>(CoachList);
 
-                Iterator iterator = currentQuery.iterator();
+                ListIterator<coach> iterator = currentQuery.listIterator();
 
                 for (String i : cmd.getParameters()){
 
                     String[] option = i.split("=");
-                    
 
                     if (option[0].equals("coach_id")){
                         String value = cmd.getParameters()[index].substring(cmd.getParameters()[index].lastIndexOf("=")+1);
                         while(iterator.hasNext()){
                             try{
-                                coach x = (coach) iterator.next();
+                                coach x = iterator.next();
                                 if (!x.CoachID.equals(value)){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
-                            
+                            catch(Exception e){}
                         }                        
                     } 
                     else if (option[0].equals("season")){
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{    
-                                coach x = (coach) iterator.next();
+                                coach x = iterator.next();
                                 if (x.Season != value){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
+                            catch(Exception e){}
                         }
                     }
                     else if (option[0].equals("first_name")){
                         String value = cmd.getParameters()[index].substring(cmd.getParameters()[index].lastIndexOf("=")+1);
                         while(iterator.hasNext()){
                             try{
-                                coach x = (coach) iterator.next();
-                                if (!x.FirstName.equals(value)){
+                                coach x = iterator.next();
+                                if (!x.FirstName.toLowerCase().equals(value.toLowerCase())){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
+                            catch(Exception e){}
                         }
                     }                    
             
@@ -254,14 +245,12 @@ public class P1 {
                         
                         while(iterator.hasNext()){
                             try{
-                                coach x = (coach) iterator.next();
-                                if (!x.LastName.equals(value)){
+                                coach x = iterator.next();
+                                if (!x.LastName.toLowerCase().equals(value.toLowerCase())){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
+                            catch(Exception e){}
                         }
                     }
             
@@ -269,14 +258,12 @@ public class P1 {
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{
-                                coach x = (coach) iterator.next();
+                                coach x = iterator.next();
                                 if (x.seasonWin != value){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
+                            catch(Exception e){}
                         }
                     }
             
@@ -284,14 +271,12 @@ public class P1 {
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{
-                                coach x = (coach) iterator.next();
+                                coach x = iterator.next();
                                 if (x.seasonLoss != value){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
+                            catch(Exception e){}
                         }
                     }
 
@@ -299,14 +284,12 @@ public class P1 {
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{
-                                coach x = (coach) iterator.next();    
+                                coach x = iterator.next();    
                                 if (x.playoffWin != value){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
+                            catch(Exception e){}
                         }
                     }
             
@@ -314,14 +297,12 @@ public class P1 {
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{
-                                coach x = (coach) iterator.next();
+                                coach x = iterator.next();
                                 if (x.playoffLost != value){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
+                            catch(Exception e){}
                         }
                     }
             
@@ -329,17 +310,19 @@ public class P1 {
                         String value = cmd.getParameters()[index].substring(cmd.getParameters()[index].lastIndexOf("=")+1);
                         while(iterator.hasNext()){
                             try{
-                                coach x = (coach) iterator.next();
+                                coach x = iterator.next();
                                 if (!x.Team.equals(value)){
                                     iterator.remove();
                                 }
                             }
-                            catch(Exception e){
-                                
-                            }
+                            catch(Exception e){}
                         }
                     }
-                    iterator = x.
+                    else{
+                        System.out.printf("Invalid field, %s", cmd.getParameters()[index]);
+                        continue;
+                    }
+                    iterator = currentQuery.listIterator(0);
                     index += 1;
                 }
                 for(coach i : currentQuery){
