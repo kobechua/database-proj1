@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Scanner;
-import java.util.Iterator;
 import java.util.ListIterator;
 
 public class P1 {
