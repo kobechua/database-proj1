@@ -82,7 +82,7 @@ public class P1 {
                     TeamsList.add(newTeam);
                 }
                 else{
-                    team newTeam = new team(cmd.getParameters()[0], cmd.getParameters()[1], cmd.getParameters()[2], cmd.getParameters()[4].charAt(0));
+                    team newTeam = new team(cmd.getParameters()[0], cmd.getParameters()[1], cmd.getParameters()[2], cmd.getParameters()[3].charAt(0));
                     TeamsList.add(newTeam);
                 }
             }
@@ -98,8 +98,15 @@ public class P1 {
                 }
             }
             else if (cmd.getCommand().equals("coaches_by_name")) {
+                String value = cmd.getParameters()[0];
+                        
+                String[] string =  value.split("\\+");
+                
+                if (string.length > 1){
+                    value = string[0] + " " + string[1];
+                }
                 for (coach i : CoachList){
-                    if (i.LastName.toLowerCase().equals(cmd.getParameters()[0].toLowerCase())){
+                    if (i.LastName.toLowerCase().equals(value.toLowerCase())){
                         System.out.format("%.9S, %4s, %s, %s, %d, %d, %d, %d, %S\n", i.CoachID, i.Season, i.FirstName, i.LastName, i.seasonWin, i.seasonLoss, i.playoffWin, i.playoffLost, i.Team);
                         for (team j : TeamsList){
                             if (i.Team.equals(j.Name)){
@@ -116,9 +123,10 @@ public class P1 {
                         System.out.format("%S, %s, %s, %s\n", i.TeamID, i.Location, i.Name, i.League);
                         for (coach j : CoachList){
                             if(j.Team.equals(i.TeamID)){
-                                System.out.format("Coach: %s %s Year:\n", j.FirstName, j.LastName, j.Season);
+                                System.out.format("Coach: %s %s, Year: %d\n", j.FirstName, j.LastName, j.Season);
                             }
                         }
+                        System.out.printf("\n");
                     }
                 }
             }
@@ -132,7 +140,7 @@ public class P1 {
                     scanner.nextLine();
                     
                     while (scanner.hasNextLine()){
-                        String[] input = scanner.nextLine().split(",");
+                        String[] input = (scanner.nextLine().split(",\\s+"));
 
                         coach newCoach = new coach(input[0], Integer.parseInt(input[1]), input[3], input[4], Integer.parseInt(input[5]), Integer.parseInt(input[6]), Integer.parseInt(input[7]), Integer.parseInt(input[8]), input[9]);
                         CoachList.add(newCoach); 
@@ -177,10 +185,12 @@ public class P1 {
                 coach biggest = new coach("", 0, "", "", 0, 0, 0 ,0 , "");
 
                 for (coach i : CoachList){
-                    int total = (i.seasonWin-i.seasonLoss) + (i.playoffWin-i.playoffLost);
-                    if (max < total){
-                        max = total;
-                        biggest = i;
+                    if (i.Season == Integer.parseInt(cmd.getParameters()[0])){
+                        int total = (i.seasonWin-i.seasonLoss) + (i.playoffWin-i.playoffLost);
+                        if (max < total){
+                            max = total;
+                            biggest = i;
+                        }
                     }
                 }
                 System.out.format("%.9S, %4s, %s, %s, %d, %d, %d, %d, %S\n", biggest.CoachID, biggest.Season, biggest.FirstName, biggest.LastName, biggest.seasonWin, biggest.seasonLoss, biggest.playoffWin, biggest.playoffLost, biggest.Team);
@@ -191,7 +201,6 @@ public class P1 {
                 ArrayList<coach> currentQuery = new ArrayList<coach>(CoachList);
 
                 ListIterator<coach> iterator = currentQuery.listIterator();
-
                 for (String i : cmd.getParameters()){
 
                     String[] option = i.split("=");
@@ -318,7 +327,7 @@ public class P1 {
                         }
                     }
                     else{
-                        System.out.printf("Invalid field, %s", cmd.getParameters()[index]);
+                        System.out.printf("Invalid field, %s. Query parameter ignored", cmd.getParameters()[index]);
                         continue;
                     }
                     iterator = currentQuery.listIterator(0);
