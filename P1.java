@@ -253,7 +253,7 @@ public class P1 {
                         }
                     }
             
-                    else if (option[0].equals("season_wins")){
+                    else if (option[0].equals("season_win")){
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{
@@ -266,7 +266,7 @@ public class P1 {
                         }
                     }
             
-                    else if (option[0].equals("season_losses")){
+                    else if (option[0].equals("season_loss")){
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{
@@ -279,7 +279,7 @@ public class P1 {
                         }
                     }
 
-                    else if (option[0].equals("playoff_wins")){
+                    else if (option[0].equals("playoff_win")){
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{
@@ -292,7 +292,7 @@ public class P1 {
                         }
                     }
             
-                    else if (option[0].equals("playoff_losses")){
+                    else if (option[0].equals("playoff_loss")){
                         int value = Integer.parseInt(cmd.getParameters()[index].replaceAll("[^0-9]", ""));
                         while(iterator.hasNext()){
                             try{
