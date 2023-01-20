@@ -1,0 +1,4 @@
+To compile, run the following script:
+
+javac *.java
+java P1
